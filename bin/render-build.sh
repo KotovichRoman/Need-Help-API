@@ -4,7 +4,7 @@
 set -o errexit
 
 # Use the correct version of Ruby
-source $RENDER_SRC_ROOT/web/bin/render/env.sh
+source $RENDER_SRC_ROOT/web/bin/env.sh
 
 gem install bundler --silent
 gem update --system --silent --no-document
