@@ -1,12 +1,14 @@
+#!/usr/bin/env bash
+
+# exit on error
 set -o errexit
 
-export RUBY_VERSION=$(cat $RENDER_SRC_ROOT/web/.ruby-version)
-export BUNDLE_GEMFILE=$RENDER_SRC_ROOT/web/Gemfile
-set_ruby_env $(fetch_or_build "$RUBY_VERSION")
-gem install bundler
-gem update --system
+# Use the correct version of Ruby
+source $RENDER_SRC_ROOT/web/bin/render/env.sh
 
+gem install bundler --silent
+gem update --system --silent --no-document
 bundle install
-bundle exec rails assets:precompile
-bundle exec rails assets:clean
-bundle exec rails db:migrate
+
+npm install --prefix $RENDER_SRC_ROOT/web
+npm run build --prefix $RENDER_SRC_ROOT/web
