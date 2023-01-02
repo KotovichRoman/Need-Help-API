@@ -1,5 +1,6 @@
 class RequestsController < ApplicationController
   before_action :set_request, only: %i[ show update destroy ]
+  before_action :authorize_request
 
   # GET /requests
   def index
