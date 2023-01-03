@@ -1,5 +1,6 @@
 class ResponsesController < ApplicationController
   before_action :set_response, only: %i[ show update destroy ]
+  before_action :authorize_request
 
   # GET /responses
   def index
@@ -16,6 +17,8 @@ class ResponsesController < ApplicationController
   # POST /responses
   def create
     @response = Response.new(response_params)
+    @response.user_id = @current_user.id
+    @response.request_id = params[:request_id]
 
     if @response.save
       render json: @response, status: :created, location: @response
@@ -46,6 +49,6 @@ class ResponsesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def response_params
-      params.fetch(:response, {})
+      params.permit(:description)
     end
 end
