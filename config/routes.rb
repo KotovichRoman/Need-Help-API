@@ -10,4 +10,7 @@ Rails.application.routes.draw do
   post "/user", to: "users#find_user_by_email"
   post "/auth/login", to: "authentication#login"
   post "/auth", to: "authentication#authorize_request"
+  post "/response-for-my-request", to: "responses#index_for_my_request"
+  post "/approve_request/:id", to: "responses#approve_response"
+  post "/decline_request", to: "responses#decline_response"
 end
