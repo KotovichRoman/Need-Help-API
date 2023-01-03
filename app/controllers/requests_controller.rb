@@ -2,9 +2,14 @@ class RequestsController < ApplicationController
   before_action :set_request, only: %i[ show update destroy ]
   before_action :authorize_request
 
-  # GET /requests
-  def index
-    @requests = Request.all
+  def index_active_requests
+    @requests = Request.where(is_confirm: false).where.not(user_id: @current_user.id)
+
+    render json: @requests
+  end
+
+  def index_my_requests
+    @requests = Request.where(is_confirm: false, user_id: @current_user.id)
 
     render json: @requests
   end
@@ -16,14 +21,19 @@ class RequestsController < ApplicationController
 
   # POST /requests
   def create
-    @request = Request.new(request_params)
-    @request.user_id = @current_user.id
-    @request.is_confirm = false
-
-    if @request.save
-      render json: @request, status: :created, location: @request
+    if @current_user.karma == 0
+      render json: { error: "You don't have karma" }
     else
-      render json: @request.errors, status: :unprocessable_entity
+      @request = Request.new(request_params)
+      @request.user_id = @current_user.id
+      #@current_user.karma = @current_user.karma - 1
+
+      if @request.save
+        #@current_user.save
+        render json: @request, status: :created, location: @request
+      else
+        render json: @request.errors, status: :unprocessable_entity
+      end
     end
   end
 
@@ -42,12 +52,11 @@ class RequestsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_request
       @request = Request.find(params[:id])
     end
 
     def request_params
-      params.permit(:title, :description_id)
+      params.permit(:title, :description)
     end
 end

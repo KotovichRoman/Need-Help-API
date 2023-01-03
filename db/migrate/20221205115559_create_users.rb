@@ -4,7 +4,6 @@ class CreateUsers < ActiveRecord::Migration[7.0]
       t.string :login
       t.string :email
       t.string :password_digest
-      t.string :image_url
       t.integer :karma, default: 3
 
       t.timestamps
