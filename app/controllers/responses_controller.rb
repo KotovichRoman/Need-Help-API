@@ -10,7 +10,7 @@ class ResponsesController < ApplicationController
   end
 
   def index_for_my_request
-    @responses = Response.where(request_id: params[:request_id])
+    @responses = Response.where(request_id: params[:request_id], is_approve: false)
 
     render json: @responses
   end
